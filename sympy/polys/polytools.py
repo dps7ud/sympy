@@ -6283,14 +6283,11 @@ def factor(f, *gens, **args):
                 partials[p] = fac
         return f.xreplace(partials)
 
-    try:
+    if not f.is_commutative:
+        from sympy.core.exprtools import factor_nc
+        return factor_nc(f)
+    else:
         return _generic_factor(f, gens, args, method='factor')
-    except PolynomialError as msg:
-        if not f.is_commutative:
-            from sympy.core.exprtools import factor_nc
-            return factor_nc(f)
-        else:
-            raise PolynomialError(msg)
 
 
 @public
